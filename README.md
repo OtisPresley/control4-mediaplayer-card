@@ -72,6 +72,10 @@ Once complete, everything will be fully managed by HACS and you will continue to
 - 🪟 **Glassmorphism UI**: Sleek, modern design with background blur and frosted glass aesthetics that matches artwork colors!
 - 🎨 **Visual Editor**: Full support for the native Home Assistant UI editor—no YAML required!
 
+<img width="33%" alt="image" src="https://github.com/user-attachments/assets/5bb373a9-de7a-4310-bd27-4356ad52330e" />
+<img width="33%" alt="image" src="https://github.com/user-attachments/assets/c6709698-3234-470b-8600-a00d8d488685" />
+<img width="33%" alt="image" src="https://github.com/user-attachments/assets/b904325e-602a-49d1-9723-17d3d9770549" />
+
 ---
 
 ## Support
