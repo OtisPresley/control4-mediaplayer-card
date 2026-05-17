@@ -1,4 +1,4 @@
-# Control4 Glass Source Card: Home Assistant Plugin
+# Control4 Media Player Card: Home Assistant Plugin
 
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-41BDF5?logo=home-assistant&logoColor=white&style=flat)](https://www.home-assistant.io/)
 [![HACS Badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://hacs.xyz)
