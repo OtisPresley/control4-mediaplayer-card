@@ -88,7 +88,12 @@ class Control4Card extends HTMLElement {
       
       if (isNewPlay || (isFirstRun && isPlaying)) {
         // Find which zone has this input selected
-        const zones = Object.keys(this._hass.states).filter(id => id.startsWith('media_player.matrix_amp_1_'));
+        const selectedZoneSourceList = this._hass.states[this.selectedZoneId]?.attributes?.source_list || [];
+        const zones = Object.keys(this._hass.states).filter(id => {
+          if (!id.startsWith('media_player.')) return false;
+          const state = this._hass.states[id];
+          return state && JSON.stringify(state.attributes.source_list || []) === JSON.stringify(selectedZoneSourceList);
+        });
         
         for (const zoneId of zones) {
           const zoneState = this._hass.states[zoneId];
@@ -145,7 +150,13 @@ class Control4Card extends HTMLElement {
       
       // Fallback
       if (zones.length === 0 && !this._entityReg) {
-        zones = Object.keys(this._hass.states).filter(id => id.startsWith('media_player.matrix_amp_1_'));
+        const refZone = this._config?.default_zone || Object.keys(this._hass.states).find(id => id.startsWith('media_player.') && this._hass.states[id].attributes.source_list);
+        const refSourceList = refZone ? this._hass.states[refZone].attributes.source_list : [];
+        zones = Object.keys(this._hass.states).filter(id => {
+          if (!id.startsWith('media_player.')) return false;
+          const state = this._hass.states[id];
+          return state && JSON.stringify(state.attributes.source_list || []) === JSON.stringify(refSourceList);
+        });
       }
       
       if (zones.length === 0) {
@@ -157,6 +168,30 @@ class Control4Card extends HTMLElement {
         return;
       }
       
+      // Helper to find longest common prefix
+      const longestCommonPrefix = (strs) => {
+        if (!strs.length) return "";
+        let prefix = strs[0];
+        for (let i = 1; i < strs.length; i++) {
+          while (strs[i].indexOf(prefix) !== 0) {
+            prefix = prefix.substring(0, prefix.length - 1);
+            if (!prefix) return "";
+          }
+        }
+        return prefix;
+      };
+
+      // Get all friendly names to find common prefix
+      const zoneNames = zones.map(id => this._hass.states[id]?.attributes?.friendly_name || id);
+      const commonPrefix = longestCommonPrefix(zoneNames);
+      
+      const getShortName = (name) => {
+        if (commonPrefix && commonPrefix.length < name.length) {
+          return name.substring(commonPrefix.length).replace(/^\d+\s+/, '');
+        }
+        return name.replace(/^\d+\s+/, '');
+      };
+
       // Ensure selected zone is valid
       if (!this.selectedZoneId || !zones.includes(this.selectedZoneId)) {
         this.selectedZoneId = this._config?.default_zone || zones[0];
@@ -545,7 +580,7 @@ class Control4Card extends HTMLElement {
                     <!-- Main Zone Volume -->
                     <div class="vol-container">
                       <div class="vol-title">
-                        ${this._hass.states[this.selectedZoneId]?.attributes?.friendly_name?.replace('Matrix Amp ', '') || 'Main Zone'}
+                        ${getShortName(this._hass.states[this.selectedZoneId]?.attributes?.friendly_name || 'Main Zone')}
                       </div>
                       <div class="vol-control-row">
                         <button id="mute-btn" style="background:none; border:none; color:white; cursor:pointer; padding:2px; display:flex; align-items:center;">
@@ -562,7 +597,7 @@ class Control4Card extends HTMLElement {
                       const zVol = getZoneVol(id);
                       const zMuted = getZoneMute(id);
                       const name = zoneState?.attributes?.friendly_name || id;
-                      const shortName = name.replace('Matrix Amp ', '');
+                      const shortName = getShortName(name);
                       
                       return `
                         <div class="vol-container">
@@ -607,7 +642,7 @@ class Control4Card extends HTMLElement {
                       const isJoined = getZoneSource(id) === this.selectedInputName;
                       const zoneState = this._hass.states[id];
                       const name = zoneState?.attributes?.friendly_name || id;
-                      const shortName = name.replace('Matrix Amp ', '');
+                      const shortName = getShortName(name);
                       return `
                         <div class="zone-chip ${isJoined ? 'joined' : ''}" data-zone="${id}">
                           ${shortName}
@@ -1148,8 +1183,14 @@ class Control4CardEditor extends HTMLElement {
       return;
     }
     
-    // Find zones for the dropdown
-    const zones = Object.keys(this._hass.states).filter(id => id.startsWith('media_player.matrix_amp_1_'));
+    // Find zones for the dropdown by matching source list of default zone or first valid zone
+    const refZone = this._config.default_zone || Object.keys(this._hass.states).find(id => id.startsWith('media_player.') && this._hass.states[id].attributes.source_list);
+    const refSourceList = refZone ? this._hass.states[refZone].attributes.source_list : [];
+    const zones = Object.keys(this._hass.states).filter(id => {
+      if (!id.startsWith('media_player.')) return false;
+      const state = this._hass.states[id];
+      return state && JSON.stringify(state.attributes.source_list || []) === JSON.stringify(refSourceList);
+    });
     const selectedZone = this._config.default_zone || (zones.length > 0 ? zones[0] : '');
     
     let inputs = [];
@@ -1158,7 +1199,7 @@ class Control4CardEditor extends HTMLElement {
     }
     
     const mappings = this._config.mappings || {};
-    const allPlayers = Object.keys(this._hass.states).filter(id => id.startsWith('media_player.') && !id.startsWith('media_player.matrix_amp_'));
+    const allPlayers = Object.keys(this._hass.states).filter(id => id.startsWith('media_player.') && !zones.includes(id));
 
     this.innerHTML = `
       <div style="padding: 16px; color: white; background: #1c1c1c; border-radius: 8px;">

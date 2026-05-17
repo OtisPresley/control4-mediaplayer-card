@@ -78,6 +78,32 @@ Once complete, everything will be fully managed by HACS and you will continue to
 
 ---
 
+
+## 🚀 Configuration & Usage
+
+### ⚙️ Card Options
+When you add the card to your dashboard, you can configure it using the visual editor. Here are the available options:
+
+- **Title**: The title displayed at the top of the card (e.g., "Command Center").
+- **Default Zone**: Select the zone that should be active by default when the card loads.
+- **Unjoin Default Input**: Specify the input that a zone should switch back to when you "Unjoin" or unlink it from a group (defaults to the first available input if not set).
+- **Mappings**: This is where the magic happens! You map your **Amplifier Input Names** to your **Home Assistant Media Players** (e.g., mapping Input `Spotify` to `media_player.spotify`). This allows the card to fetch artwork and control playback!
+
+### ⭐ Managing Favorites
+The card allows you to save your favorite inputs or specific media commands for quick recall:
+- **Save a Favorite**: Click the ⭐ icon next to the media info.
+- **Add Manual Favorite**: Click the `+` icon in the Favorites section to manually define a name, target input, and command (e.g., "Play NPR").
+- **Recall**: Click a favorite chip to instantly switch the zone to that input and send the command to the mapped player!
+- **Delete**: Click the `x` on a favorite chip to remove it.
+
+### 🔗 Linking & Unlinking Zones (Multi-Room Audio)
+Since the legacy amplifier firmware does not support native hardware linking, this card simulates multi-room audio by grouping zones to the same source:
+- **Link a Zone**: Click on a grayed-out zone chip in the "Linked Zones (Join)" section. This will switch that zone to the *same input* as your current active zone, and it will now show up with its own volume slider!
+- **Unlink a Zone**: Click on a highlighted blue zone chip. This will switch that zone back to its default input (or the first available input), removing it from the group.
+
+>>>>>>> 940874b (Bug fixes and cleanup)
+---
+
 ## Support
 
 - Open an issue on the [GitHub tracker](https://github.com/OtisPresley/control4-mediaplayer-card/issues) if you run into problems or have feature requests.
