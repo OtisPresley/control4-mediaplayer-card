@@ -12,7 +12,7 @@ A gorgeous, **Source-Centric** custom Lovelace Card featuring a Glassmorphism de
 
 ## Installation
 
-### HACS (recommended)
+### HACS (recommended) - ⭐ PR Pending
 
 You can install this card directly from HACS:
 
