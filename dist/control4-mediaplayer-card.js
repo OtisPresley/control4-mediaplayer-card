@@ -140,7 +140,7 @@ class Control4Card extends HTMLElement {
       // 1. Find zones
       let zones = [];
       if (this._entityReg) {
-        const integrationEntities = this._entityReg.filter(e => e.platform && e.platform.toLowerCase().includes('control4'));
+        const integrationEntities = this._entityReg.filter(e => e.platform === 'control4_mediaplayer');
         
         zones = integrationEntities
           .filter(e => e.entity_id.startsWith('media_player.'))
@@ -1171,6 +1171,19 @@ class Control4CardEditor extends HTMLElement {
 
   set hass(hass) {
     this._hass = hass;
+    
+    if (!this._entityReg && !this._fetchingReg && hass && typeof hass.callWS === 'function') {
+      this._fetchingReg = true;
+      hass.callWS({ type: 'config/entity_registry/list' }).then(r => {
+        this._entityReg = r;
+        this._fetchingReg = false;
+        this.render(true);
+      }).catch(e => {
+        this._entityReg = [];
+        this._fetchingReg = false;
+      });
+    }
+    
     this.render();
   }
 
@@ -1183,14 +1196,25 @@ class Control4CardEditor extends HTMLElement {
       return;
     }
     
-    // Find zones for the dropdown by matching source list of default zone or first valid zone
-    const refZone = this._config.default_zone || Object.keys(this._hass.states).find(id => id.startsWith('media_player.') && this._hass.states[id].attributes.source_list);
-    const refSourceList = refZone ? this._hass.states[refZone].attributes.source_list : [];
-    const zones = Object.keys(this._hass.states).filter(id => {
-      if (!id.startsWith('media_player.')) return false;
-      const state = this._hass.states[id];
-      return state && JSON.stringify(state.attributes.source_list || []) === JSON.stringify(refSourceList);
-    });
+    // Find zones for the dropdown
+    let zones = [];
+    if (this._entityReg) {
+      const integrationEntities = this._entityReg.filter(e => e.platform === 'control4_mediaplayer');
+      zones = integrationEntities
+        .filter(e => e.entity_id.startsWith('media_player.'))
+        .map(e => e.entity_id)
+        .filter(id => id in this._hass.states);
+    }
+    
+    if (zones.length === 0) {
+      const refZone = this._config.default_zone || Object.keys(this._hass.states).find(id => id.startsWith('media_player.') && this._hass.states[id].attributes.source_list);
+      const refSourceList = refZone ? this._hass.states[refZone].attributes.source_list : [];
+      zones = Object.keys(this._hass.states).filter(id => {
+        if (!id.startsWith('media_player.')) return false;
+        const state = this._hass.states[id];
+        return state && JSON.stringify(state.attributes.source_list || []) === JSON.stringify(refSourceList);
+      });
+    }
     const selectedZone = this._config.default_zone || (zones.length > 0 ? zones[0] : '');
     
     let inputs = [];

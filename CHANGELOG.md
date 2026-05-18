@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [0.1.2] - 2026-05-18
+### 🐛 Fixed
+- 🛡️ **Bulletproof Detection**: Changed platform check to strictly use the `control4_mediaplayer` slug in the card and editor to prevent collision with official or other community Control4 integrations.
+
 ## [0.1.1] - 2026-05-17
 ### 🚀 Added
 - 🔍 **Smart Zone Discovery**: Replaced hard-coded entity strings with dynamic source-list matching to auto-discover zones on the same amplifier!
