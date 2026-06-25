@@ -3,7 +3,7 @@
 [![Home Assistant](https://img.shields.io/badge/Home%20Assistant-41BDF5?logo=home-assistant&logoColor=white&style=flat)](https://www.home-assistant.io/)
 [![HACS Badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://hacs.xyz)
 [![Stars](https://img.shields.io/github/stars/OtisPresley/control4-mediaplayer-card?label=Stars&color=41BDF5)](https://github.com/OtisPresley/control4-mediaplayer-card/stargazers)
-[![License: MIT](https://img.shields.io/badge/License-MIT-41BDF5.svg)](https://github.com/OtisPresley/control4-mediaplayer-card/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/nse-MIT-e0b416.svg)](https://github.com/OtisPresley/control4-mediaplayer-card/blob/main/LICENSE)
 [![HACS](https://img.shields.io/github/actions/workflow/status/OtisPresley/control4-mediaplayer-card/hacs.yaml?branch=main&label=HACS)](https://github.com/OtisPresley/control4-mediaplayer-card/actions/workflows/hacs.yaml)
 
 A gorgeous, **Source-Centric** custom Lovelace Card featuring a Glassmorphism design, built exclusively for the [Control4 Media Player](https://github.com/OtisPresley/control4-mediaplayer) integration for Home Assistant.
