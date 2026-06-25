@@ -60,7 +60,7 @@ class Control4Card extends HTMLElement {
     }
     
     // Auto-detect playing source and switch zone/input
-    this.autoDetectPlaying();
+    // this.autoDetectPlaying();
     
     this.render();
   }
@@ -1291,6 +1291,7 @@ class Control4CardEditor extends HTMLElement {
         
         newConfig.title = this.querySelector('#editor-title').value;
         newConfig.unjoin_default_input = this.querySelector('#editor-unjoin-input').value;
+        newConfig.default_zone = this.querySelector('#editor-zone-select').value;
         
         this.querySelectorAll('.player-select').forEach(select => {
           const input = select.getAttribute('data-input');
