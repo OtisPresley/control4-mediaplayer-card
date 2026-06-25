@@ -101,7 +101,6 @@ Since the legacy amplifier firmware does not support native hardware linking, th
 - **Link a Zone**: Click on a grayed-out zone chip in the "Linked Zones (Join)" section. This will switch that zone to the *same input* as your current active zone, and it will now show up with its own volume slider!
 - **Unlink a Zone**: Click on a highlighted blue zone chip. This will switch that zone back to its default input (or the first available input), removing it from the group.
 
->>>>>>> 940874b (Bug fixes and cleanup)
 ---
 
 ## Support
